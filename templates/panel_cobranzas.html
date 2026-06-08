@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+
+        Panel Cobranzas
+
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+<body class="bg-light">
+
+    <nav class="navbar navbar-dark bg-primary">
+
+        <div class="container-fluid">
+
+            <span class="navbar-brand">
+
+                💰 Panel Cobranzas
+
+            </span>
+
+            <span class="text-white">
+
+                {{ usuario.nombre }}
+
+            </span>
+
+        </div>
+
+    </nav>
+
+
+    <div class="container mt-5">
+
+        <div class="card shadow">
+
+            <div class="card-body">
+
+                <h2 class="mb-4">
+
+                    Pedidos
+
+                </h2>
+
+
+                <table class="table table-hover">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>
+                                Pedido
+                            </th>
+
+                            <th>
+                                Cliente
+                            </th>
+
+                            <th>
+                                Total
+                            </th>
+
+                            <th>
+                                Tipo
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th>
+                                Acción
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for pedido in pedidos %}
+
+                        <tr>
+
+                            <td>
+
+                                #{{ pedido[0] }}
+
+                            </td>
+
+                            <td>
+
+                                {{ pedido[1] }}
+
+                            </td>
+
+                            <td>
+
+                                CLP $
+                                {{ pedido[2] }}
+
+                            </td>
+
+                            <td>
+
+                                {{ pedido[4] }}
+
+                            </td>
+
+                            <td>
+
+                                {% if pedido[3] == "pagado" %}
+
+                                    <span class="badge bg-success">
+
+                                        Pagado
+
+                                    </span>
+
+                                {% elif pedido[3] == "pendiente_pago" %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        Pendiente pago
+
+                                    </span>
+
+                                {% elif pedido[3] == "pendiente_aprobacion" %}
+
+                                    <span class="badge bg-info text-dark">
+
+                                        Pendiente aprobación
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+
+                                        {{ pedido[3] }}
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if pedido[3] != "pagado" %}
+
+                                <button
+                                    class="btn btn-success btn-sm"
+                                    onclick="aprobarPedido(
+                                        '{{ pedido[0] }}'
+                                    )"
+                                >
+
+                                    Aprobar pago
+
+                                </button>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        async function aprobarPedido(
+
+            idPedido
+
+        ){
+
+            if(
+
+                !confirm(
+
+                    "¿Aprobar este pago?"
+
+                )
+
+            ){
+
+                return
+
+            }
+
+
+            try{
+
+                const response = await fetch(
+
+                    `/aprobar_pedido/${idPedido}`,
+
+                    {
+
+                        method:"POST"
+
+                    }
+
+                )
+
+
+                const data = await response.json()
+
+
+                if(data.error){
+
+                    alert(data.error)
+
+                    return
+
+                }
+
+
+                alert(
+
+                    "Pedido aprobado"
+
+                )
+
+
+                location.reload()
+
+            }
+
+            catch(error){
+
+                console.log(error)
+
+                alert(
+
+                    "Error de conexión"
+
+                )
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+body{
+    background-color: #f5f5f5;
+}
+
+.card{
+    border-radius: 12px;
+}
+
+.sticky-top{
+    top: 20px;
+}
+
+.carrito-item{
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
